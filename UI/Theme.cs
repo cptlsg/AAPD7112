@@ -72,6 +72,31 @@ namespace MunicipalServicesApp.UI
             }
         }
 
+        // Service Request Status page: one colour per stage of a request.
+        public static Color GetStatusColour(RequestStatus status)
+        {
+            switch (status)
+            {
+                case RequestStatus.Submitted: return TextMuted;
+                case RequestStatus.Acknowledged: return Primary;
+                case RequestStatus.Assigned: return Color.FromArgb(124, 70, 160);
+                case RequestStatus.InProgress: return Warning;
+                case RequestStatus.Resolved: return Accent;
+                default: return Color.FromArgb(84, 94, 110);
+            }
+        }
+
+        public static Color GetRequestPriorityColour(RequestPriority priority)
+        {
+            switch (priority)
+            {
+                case RequestPriority.Critical: return Danger;
+                case RequestPriority.High: return Warning;
+                case RequestPriority.Medium: return Primary;
+                default: return TextMuted;
+            }
+        }
+
         public static void StyleActionButton(Button button)
         {
             button.FlatStyle = FlatStyle.Flat;

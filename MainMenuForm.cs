@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using MunicipalServicesApp.Models;
 using MunicipalServicesApp.Services;
@@ -16,6 +17,7 @@ namespace MunicipalServicesApp
             WireUpEvents();
             RefreshIssueCount();
             RefreshEventsSummary();
+            RefreshServiceStatusSummary();
         }
 
         private void ApplyTheme()
@@ -34,7 +36,8 @@ namespace MunicipalServicesApp
             Theme.StyleActionButton(btnReportIssues);
             Theme.StyleActionButton(btnLocalEvents);
             btnLocalEvents.Enabled = true;
-            Theme.StyleDisabledButton(btnServiceStatus);
+            Theme.StyleActionButton(btnServiceStatus);
+            btnServiceStatus.Enabled = true;
             Theme.StyleSecondaryButton(btnExit);
 
             lblReportIssuesInfo.Font = Theme.BodyFont;
@@ -43,7 +46,8 @@ namespace MunicipalServicesApp
             lblLocalEventsInfo.ForeColor = Theme.TextPrimary;
             lblLocalEventsInfo.UseMnemonic = false;
             lblServiceStatusInfo.Font = Theme.BodyFont;
-            lblServiceStatusInfo.ForeColor = Theme.TextMuted;
+            lblServiceStatusInfo.ForeColor = Theme.TextPrimary;
+            lblServiceStatusInfo.UseMnemonic = false;
 
             lblIssueCount.Font = Theme.SmallFont;
             lblIssueCount.ForeColor = Theme.TextMuted;
@@ -53,6 +57,7 @@ namespace MunicipalServicesApp
         {
             btnReportIssues.Click += BtnReportIssues_Click;
             btnLocalEvents.Click += BtnLocalEvents_Click;
+            btnServiceStatus.Click += BtnServiceStatus_Click;
             btnExit.Click += BtnExit_Click;
             Activated += MainMenuForm_Activated;
         }
@@ -84,6 +89,22 @@ namespace MunicipalServicesApp
             }
         }
 
+        private void BtnServiceStatus_Click(object? sender, EventArgs e)
+        {
+            using (ServiceRequestStatusForm statusForm = new ServiceRequestStatusForm())
+            {
+                Hide();
+                try
+                {
+                    statusForm.ShowDialog(this);
+                }
+                finally
+                {
+                    Show();
+                }
+            }
+        }
+
         private void BtnExit_Click(object sender, EventArgs e)
         {
             DialogResult confirm = MessageBox.Show(
@@ -102,6 +123,28 @@ namespace MunicipalServicesApp
         {
             RefreshIssueCount();
             RefreshEventsSummary();
+            RefreshServiceStatusSummary();
+        }
+
+        // Summarises the service requests and names the most urgent one waiting
+        // for a crew (the top of ServiceRequestManager's min-heap).
+        private void RefreshServiceStatusSummary()
+        {
+            ServiceRequestManager requests = ServiceRequestManager.Shared;
+
+            string summary = string.Format(
+                "Track a report with its reference number and follow its progress. " +
+                "{0} requests are on record and {1} are still open.",
+                requests.Count, requests.CountOpen());
+
+            List<ServiceRequest> next = requests.GetUrgentQueue(1);
+            if (next.Count > 0 && next[0].Priority == RequestPriority.Critical)
+            {
+                summary += Environment.NewLine + Environment.NewLine +
+                           "Most urgent: " + next[0].Title + " (" + next[0].Suburb + ")";
+            }
+
+            lblServiceStatusInfo.Text = summary;
         }
 
         // Describes the Local Events service and, if there is one, names the most

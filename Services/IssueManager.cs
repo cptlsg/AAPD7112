@@ -5,11 +5,11 @@ using MunicipalServicesApp.Models;
 namespace MunicipalServicesApp.Services
 {
     // Stores and manages all reported issues for the application session.
+    // Every issue also becomes a tracked service request (Part 3), so the reference
+    // number is issued by ServiceRequestManager to keep numbers unique across both.
     public static class IssueManager
     {
         private static readonly List<Issue> Issues = new List<Issue>();
-
-        private static int _sequence = 0;
 
         // Number of issues reported
         public static int Count
@@ -24,8 +24,8 @@ namespace MunicipalServicesApp.Services
                 throw new ArgumentNullException("issue");
             }
 
-            _sequence++;
-            issue.ReferenceNumber = string.Format("MSA-{0}-{1:D4}", DateTime.Now.Year, _sequence);
+            ServiceRequest request = ServiceRequestManager.Shared.RegisterIssue(issue);
+            issue.ReferenceNumber = request.ReferenceNumber;
             Issues.Add(issue);
 
             return issue.ReferenceNumber;
