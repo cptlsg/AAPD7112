@@ -26,7 +26,7 @@ involved, so it can be checked in the source code and the Git history.
 | 5 | Report Issues | Confirmation message tells residents where to track their report | Usability |
 | 6 | Theme | Status and priority colours defined in one place | Consistency |
 | 7 | Repository | Merge conflict markers removed from `.gitignore` | Bug fix |
-| 8 | Documentation | README rewritten to cover the complete application | Documentation |
+| 8 | Documentation | README rewritten as a concise guide to the complete application | Documentation |
 | 9 | Documentation | Framework deviation (.NET 8) explained again for Part 3 | Transparency |
 
 ## Details
@@ -104,17 +104,12 @@ involved, so it can be checked in the source code and the Git history.
 
 ### 8. README covers the complete application
 
-- **Change:** The README now covers all three parts. It adds:
-  - quick links to the most-used sections;
-  - step-by-step instructions for every feature of the Service Request Status page;
-  - a walkthrough that exercises every data structure;
-  - an in-depth section explaining each Part 3 data structure, its role and its effect on
-    efficiency, with examples from the sample data;
-  - updated project structure, data storage, known limitations and troubleshooting
-    sections.
-
-  The *Known limitations* entry saying that Service Request Status is disabled was
-  removed.
+- **Change:** The README was rewritten as a short guide to the complete application,
+  focused on what a user needs: requirements, how to compile, how to run, and how to use
+  each of the three services. The Service Request Status section explains tracking, the
+  filters, every tab and a quick tour. A troubleshooting table covers common problems.
+  The detailed explanations of the data structures are in the Word report instead. The
+  old line saying that Service Request Status is not yet available was removed.
 - **Files:** `README.md`
 
 ### 9. Framework deviation explained again
